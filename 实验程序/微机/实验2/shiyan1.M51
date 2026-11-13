@@ -1,0 +1,85 @@
+BL51 BANKED LINKER/LOCATER V5.03                                                        10/20/2024  18:05:19  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V5.03, INVOKED BY:
+C:\KEIL\C51\BIN\BL51.EXE 1.obj TO shiyan1
+
+
+INPUT MODULES INCLUDED:
+  1.obj (1)
+
+
+LINK MAP OF MODULE:  shiyan1 (1)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0068H     ABSOLUTE     
+
+
+
+SYMBOL TABLE OF MODULE:  shiyan1 (1)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        1
+  C:005BH         SYMBOL        DELAY
+  C:005DH         SYMBOL        DELAY1
+  C:005FH         SYMBOL        DLP1
+  C:0061H         SYMBOL        DLP2
+  B:00A8H.7       SYMBOL        EA
+  C:003FH         SYMBOL        EINT0
+  C:004EH         SYMBOL        EINT1
+  C:0041H         SYMBOL        ELP0
+  B:00A8H.0       SYMBOL        EX0
+  B:00A8H.2       SYMBOL        EX1
+  C:0052H         SYMBOL        ILP1
+  B:0088H.0       SYMBOL        IT0
+  B:0088H.2       SYMBOL        IT1
+  D:0090H         SYMBOL        P1
+  C:0030H         SYMBOL        START
+  C:0000H         LINE#         3
+  C:0003H         LINE#         5
+  C:0013H         LINE#         7
+  C:0030H         LINE#         9
+  C:0033H         LINE#         10
+  C:0035H         LINE#         11
+  C:0037H         LINE#         12
+  C:0039H         LINE#         13
+  C:003BH         LINE#         14
+  C:003DH         LINE#         15
+  C:003FH         LINE#         16
+  C:0041H         LINE#         17
+  C:0044H         LINE#         18
+  C:0046H         LINE#         19
+  C:0049H         LINE#         20
+BL51 BANKED LINKER/LOCATER V5.03                                                      10/20/2024  18:05:19  PAGE 2
+
+
+  C:004BH         LINE#         21
+  C:004DH         LINE#         22
+  C:004EH         LINE#         23
+  C:0050H         LINE#         24
+  C:0052H         LINE#         25
+  C:0054H         LINE#         26
+  C:0055H         LINE#         27
+  C:0056H         LINE#         28
+  C:0058H         LINE#         29
+  C:005AH         LINE#         30
+  C:005BH         LINE#         31
+  C:005DH         LINE#         32
+  C:005FH         LINE#         33
+  C:0061H         LINE#         34
+  C:0063H         LINE#         35
+  C:0065H         LINE#         36
+  C:0067H         LINE#         37
+  -------         ENDMOD        1
+
+Program Size: data=8.0 xdata=0 code=104
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

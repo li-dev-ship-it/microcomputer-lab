@@ -1,0 +1,163 @@
+A51 MACRO ASSEMBLER  4_2                                                                  10/20/2024 01:14:35 PAGE     1
+
+
+MACRO ASSEMBLER A51 V7.08a
+OBJECT MODULE PLACED IN 4.2.OBJ
+ASSEMBLER INVOKED BY: C:\Keil\C51\BIN\A51.EXE 4.2.ASM SET(SMALL) DEBUG EP
+
+LOC  OBJ            LINE     SOURCE
+
+                       1     
+                       2             ;P2.3--¼õËÙ 
+                       3             ;P2.4--¼ÓËÙ
+0000                   4             ORG 0000H
+0000 7B05              5             MOV R3,#5                    ;ÏàÁÚ²½Ö®¼äµÄÑÓÊ±¾ö¶¨µç»úµÄ×ªËÙ¡£¹Ê¿ØÖÆµ÷ÓÃÑÓÊ±º¯Ê´ÎÊ 
+                             ´Ó¶ø¿ØÖÆ¼Ó¼õËÙ
+0002 439000            6             STOP: ORL P1, #00H           ;»òÔËËã
+0005 759000            7             LOOP: MOV P1, #00H           ;µç»úÍ£Ö¹
+0008 30A014            8             JNB P2.0, FOR2 ; Èç¹ûp2.0°´ÏÂÕ×ª  
+000B 30A11A            9             JNB P2.1, REV2 ; Èç¹ûp2.1°´ÏÂ·´×ª
+000E 30A202           10             JNB P2.2, STOP1 ; Èç¹ûp2.2°´ÏÂÍ£Ö¹
+0011 80F2             11             JMP LOOP ;·´¸´¼à²â¼üÅÌ
+                      12             
+                      13             
+0013 11A1             14             STOP1: CALL DELAY ;ÑÓÊ±°´¼þ¼üÏû³¶¶¶¯
+0015 30A2FD           15             JNB P2.2, $         ;p2.2·Å¿ª·ñ?
+0018 759000           16             MOV P1, #00H     ;µç»úÍ£Ö¹
+001B 11A1             17             CALL DELAY
+001D 80E3             18             JMP STOP       ;Ìø×ªµ½STOP
+                      19             
+001F 11A1             20             FOR2: CALL DELAY       ;ÑÓÊ±
+0021 30A0FD           21             JNB P2.0, $           ;µÈ´Õ×ª°´¼üÊÍ·Å
+0024 11A1             22             CALL DELAY
+0026 8009             23             JMP FOR
+                      24             
+0028 11A1             25             REV2: CALL DELAY   ;ÑÓÊ±
+002A 30A1FD           26             JNB P2.1, $        ;µÈ´·´×ª°´¼üÊÍ·Å
+002D 11A1             27             CALL DELAY     
+002F 8038             28             JMP REV
+                      29             
+                      30             
+                      31             
+                      32             ;Õ×ª
+0031 7800             33             FOR: MOV R0, #00H  ;Æ«ÒÆÁ¿
+0033 E8               34             FOR1: MOV A, R0
+0034 9000AA           35             MOV DPTR, #TABLE
+0037 93               36             MOVC A, @A+DPTR          ;ÕÒµ½µ±Ç°Õ×ª´úÂë
+0038 60F7             37             JZ FOR ;ÊÇ·ñµ½ÁË½áÊøÂë00h AÎª0ºóÕ×ª´úÂëÒ»ÖÜÑ­»·½áÊø ¿ªÊ¼ÏÂÒ»´ÎÑ­»·
+003A F4               38             CPL A            ;È¡·´Ê¾Ý µÍµçÆ½ÓÐÐ§
+003B F590             39             MOV P1, A           ;Êä³öµ½µç»ú
+003D EB               40             MOV A,R3
+003E                  41             LOOP1:
+003E 30A2D2           42             JNB P2.2, STOP1    ;ÅÐ¶ÏÓÐÐÂµÄ°´¼ü°´ÏÂÂð
+0041 30A1E4           43             JNB P2.1, REV2
+0044 30A0D8           44             JNB P2.0, FOR2
+0047 20A30A           45             JB P2.3, FOR3      ;ÅÐ¶Ï¼õËÙ°´¼üÊÇ·ñ°´ÏÂ Ã»ÓÐ°´¾ÍÌø×ª 
+004A 30A3FD           46         JNB P2.3,$         ;µÈ´°´¼üÊÍ·Å
+004D 0B               47             INC R3              ;R3×Ô¶¯¼ÓÒ»
+004E EB               48             MOV A,R3            
+004F BB0B02           49             CJNE R3,#11,FOR3   ;·¶Î§1-10
+0052 14               50             DEC A
+0053 1B               51             DEC R3
+0054                  52             FOR3:
+0054 20A40A           53             JB P2.4,FOR4       ;ÅÐ¶Ï¼ÓËÙ°´¼üÊÇ·ñ°´ÏÂ
+0057 30A4FD           54             JNB P2.4,$         ;µÈ´°´¼üÊÍ·Å
+005A 1B               55             DEC R3            ;R3×Ô¶¯¼õ1
+005B EB               56             MOV A,R3
+005C BB0002           57             CJNE R3,#0,FOR4   ;·¶Î§1-10
+A51 MACRO ASSEMBLER  4_2                                                                  10/20/2024 01:14:35 PAGE     2
+
+005F 04               58             INC A
+0060 0B               59             INC R3
+0061                  60             FOR4:
+0061 11A1             61             CALL DELAY        ;Ã»ÓÐÔò¼ÌÐøÖ´ÐÐÕ×ª
+0063 D5E0D8           62             DJNZ ACC,LOOP1
+0066 08               63             INC R0            ;ÏÂÒ»¸öÊ¾Ý
+0067 80CA             64             JMP FOR1        ;Ìø×ªµ½FOR1
+                      65             
+                      66             ;·´×ª
+0069                  67             REV: 
+0069 7805             68             MOV R0, #05H ;·´×ªµ½tableÈ¡ÂëÖ¸Õë³õÖµ
+006B                  69             REV1: 
+006B E8               70             MOV A, R0
+006C 9000AA           71             MOV DPTR, #TABLE  ;ÕÒµ½µ±Ç°·´×ª´úÂë
+006F 93               72             MOVC A, @A+DPTR
+0070 60F7             73             JZ REV            ;ÊÇ·ñµ½ÁË½áÊøÂë00h AÎª0ºóÕ×ª´úÂëÒ»ÖÜÑ­»·½áÊø ¿ªÊ¼ÏÂÒ»´ÎÑ­»·
+0072 F4               74             CPL A            ;È¡·´Ê¾Ý µÍµçÆ½ÓÐÐ§
+0073 F590             75             MOV P1, A
+0075 EB               76             MOV A,R3
+0076                  77             LOOP2:
+0076 30A29A           78             JNB P2.2, STOP1    ;ÅÐ¶ÏÓÐÐÂµÄ°´¼ü°´ÏÂÂð
+0079 30A1AC           79             JNB P2.1, REV2
+007C 30A0A0           80             JNB P2.0, FOR2
+007F 20A30A           81             JB P2.3, REV3
+0082 30A3FD           82         JNB P2.3,$
+0085 0B               83             INC R3
+0086 EB               84             MOV A,R3
+0087 BB0B02           85             CJNE R3,#11,REV3   ;·¶Î§1-10
+008A 14               86             DEC A
+008B 1B               87             DEC R3
+008C                  88             REV3:
+008C 20A40A           89             JB P2.4,REV4
+008F 30A4FD           90             JNB P2.4,$
+0092 1B               91             DEC R3
+0093 EB               92             MOV A,R3
+0094 BB0002           93             CJNE R3,#0,REV4   ;·¶Î§1-10
+0097 04               94             INC A
+0098 0B               95             INC R3
+0099                  96             REV4:
+0099 11A1             97             CALL DELAY        ;Ã»ÓÐÔò¼ÌÐøÖ´ÐÐÕ×ª
+009B D5E0D8           98             DJNZ ACC,LOOP2
+009E 08               99             INC R0          ;ÏÂÒ»¸öÊ¾Ý
+009F 80CA            100             JMP REV1        ;Ìø×ªµ½REV1
+                     101             
+                     102             
+                     103             
+00A1                 104             DELAY: 
+00A1 791E            105             MOV R1, #30 ;²½½øµç»úµÄ×ªËÙ20ms
+00A3 7AF8            106             D1: MOV R2, #248
+00A5 DAFE            107             DJNZ R2, $
+00A7 D9FA            108             DJNZ R1, D1
+00A9 22              109             RET
+                     110             
+00AA                 111             TABLE:
+00AA 01020408        112             db 01h,02h,04h,08h ;Õ×ª±í
+00AE 00              113             db 00 ;Õ×ª½áÊø
+00AF 01080402        114             db 01h,08h,04h,02h ;·´×ª
+00B3 00              115             db 00 ;·´×ª½áÊø
+                     116             END
+A51 MACRO ASSEMBLER  4_2                                                                  10/20/2024 01:14:35 PAGE     3
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+ACC. . . . . . . .  D ADDR   00E0H   A   
+D1 . . . . . . . .  C ADDR   00A3H   A   
+DELAY. . . . . . .  C ADDR   00A1H   A   
+FOR. . . . . . . .  C ADDR   0031H   A   
+FOR1 . . . . . . .  C ADDR   0033H   A   
+FOR2 . . . . . . .  C ADDR   001FH   A   
+FOR3 . . . . . . .  C ADDR   0054H   A   
+FOR4 . . . . . . .  C ADDR   0061H   A   
+LOOP . . . . . . .  C ADDR   0005H   A   
+LOOP1. . . . . . .  C ADDR   003EH   A   
+LOOP2. . . . . . .  C ADDR   0076H   A   
+P1 . . . . . . . .  D ADDR   0090H   A   
+P2 . . . . . . . .  D ADDR   00A0H   A   
+REV. . . . . . . .  C ADDR   0069H   A   
+REV1 . . . . . . .  C ADDR   006BH   A   
+REV2 . . . . . . .  C ADDR   0028H   A   
+REV3 . . . . . . .  C ADDR   008CH   A   
+REV4 . . . . . . .  C ADDR   0099H   A   
+STOP . . . . . . .  C ADDR   0002H   A   
+STOP1. . . . . . .  C ADDR   0013H   A   
+TABLE. . . . . . .  C ADDR   00AAH   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

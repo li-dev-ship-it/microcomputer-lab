@@ -1,0 +1,44 @@
+BL51 BANKED LINKER/LOCATER V5.03                                                        11/03/2024  11:29:52  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V5.03, INVOKED BY:
+C:\KEIL\C51\BIN\BL51.EXE 7.2.obj TO shiyan2
+
+
+INPUT MODULES INCLUDED:
+  7.2.obj (7_2)
+
+
+LINK MAP OF MODULE:  shiyan2 (7_2)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0109H     ABSOLUTE     
+
+
+
+SYMBOL TABLE OF MODULE:  shiyan2 (7_2)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        7_2
+  N:FEFFH         SYMBOL        DAPORT
+  C:0105H         SYMBOL        DLP1
+  C:0100H         SYMBOL        START
+  C:0000H         LINE#         4
+  C:0100H         LINE#         6
+  C:0103H         LINE#         7
+  C:0105H         LINE#         8
+  C:0106H         LINE#         9
+  C:0107H         LINE#         10
+  -------         ENDMOD        7_2
+
+Program Size: data=8.0 xdata=0 code=265
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,149 @@
+A51 MACRO ASSEMBLER  6_3                                                                  11/03/2024 10:53:22 PAGE     1
+
+
+MACRO ASSEMBLER A51 V7.08a
+OBJECT MODULE PLACED IN 6.3.OBJ
+ASSEMBLER INVOKED BY: C:\Keil\C51\BIN\A51.EXE 6.3.asm SET(SMALL) DEBUG EP
+
+LOC  OBJ            LINE     SOURCE
+
+  007F                 1     BIT_COUNT DATA 07FH 
+  007E                 2      TIMER DATA 07EH 
+  007D                 3      TIMER1 DATA 07DH 
+  007C                 4      TEN DATA 07CH 
+  0020                 5      DATA_IN DATA 020H 
+  0021                 6      DATA_OUT DATA 021H 
+                       7      
+  0093                 8      KEY BIT P1.3 ;7279的KEY连接于P1.3 
+  0096                 9      CLK BIT P1.6 ;7279的CLK连接于P1.6 
+  0097                10      DAT BIT P1.7 ;7279的DATA连接于P1.7 
+  00A7                11      CS BIT P2.7 ;7279的CS连接于P2.7 
+                      12     
+0000                  13      ORG 0000H 
+0000 020100           14      LJMP START 
+0100                  15      ORG 0100H 
+0100 75812F           16     START: MOV SP,#2FH ;定义堆栈
+0103 7590FF           17      MOV P1,#0FFH ;I/O口初始化
+0106 757E32           18      MOV TIMER, #50 
+0109 757DFF           19     START_DELAY: MOV TIMER1,#255 
+010C D57DFD           20     START_DELAY1: DJNZ TIMER1, START_DELAY1 
+010F D57EF7           21      DJNZ TIMER,START_DELAY 
+0112 7521BF           22      MOV DATA_OUT,#0BFH ;发复位指令
+0115 3152             23      CALL SEND 
+0117 D2A7             24      SETB CS ;复位CS为高电平
+0119 D2D5             25      SETB F0 
+                      26      
+011B 2093FD           27     MAIN: JB KEY,MAIN ;检测是否有键按下
+011E 30D509           28      JNB F0,NEXTKEY 
+0121 7521A4           29      MOV DATA_OUT,#0A4H 
+0124 3152             30      CALL SEND 
+0126 D2A7             31      SETB CS 
+0128 D2D5             32      SETB F0 
+                      33      
+012A 752115           34     NEXTKEY: MOV DATA_OUT,#15H 
+012D 3152             35      CALL SEND 
+012F 3170             36      CALL RECEIVE 
+0131 D2A7             37      SETB CS 
+                      38      
+0133 E520             39      MOV A,DATA_IN 
+                      40     
+0135 F57C             41      MOV TEN,A 
+0137 7521A1           42      MOV DATA_OUT,#0A1H  
+013A 3152             43      CALL SEND 
+013C 7521C8           44      MOV DATA_OUT,#11001000B 
+                      45      
+013F 3152             46      CALL SEND 
+0141 857C21           47      MOV DATA_OUT,TEN 
+                      48     
+0144 3152             49      CALL SEND 
+0146 752180           50      MOV DATA_OUT,#80H 
+0149 3152             51      CALL SEND 
+014B D2A7             52      SETB CS 
+014D 3093FD           53     WAIT: JNB KEY,WAIT 
+0150 80C9             54      JMP MAIN 
+                      55     ; 发送子程序
+0152 757F08           56     SEND: MOV BIT_COUNT,#8 
+0155 C2A7             57      CLR CS 
+0157 318E             58      CALL LONG_DELAY 
+A51 MACRO ASSEMBLER  6_3                                                                  11/03/2024 10:53:22 PAGE     2
+
+0159 A20F             59     SEND_LOOP: MOV C,DATA_OUT.7 
+015B 9297             60      MOV DAT,C 
+015D D296             61      SETB CLK 
+015F E521             62      MOV A,DATA_OUT 
+0161 23               63      RL A 
+0162 F521             64      MOV DATA_OUT,A 
+0164 3195             65      CALL SHORT_DELAY 
+0166 C296             66      CLR CLK 
+0168 3195             67      CALL SHORT_DELAY 
+016A D57FEC           68      DJNZ BIT_COUNT,SEND_LOOP 
+016D C297             69      CLR DAT 
+016F 22               70      RET 
+                      71     ;接收子程序
+0170 757F08           72     RECEIVE: MOV BIT_COUNT,#8 
+0173 D297             73      SETB DAT 
+0175 318E             74      CALL LONG_DELAY 
+0177 D296             75     RECEIVE_LOOP: SETB CLK 
+0179 3195             76      CALL SHORT_DELAY 
+017B E520             77      MOV A,DATA_IN 
+017D 23               78      RL A 
+017E F520             79      MOV DATA_IN,A 
+0180 A297             80      MOV C,DAT 
+0182 9200             81      MOV DATA_IN.0,C 
+0184 C296             82      CLR CLK 
+                      83     
+                      84     
+0186 3195             85      CALL SHORT_DELAY 
+0188 D57FEC           86      DJNZ BIT_COUNT,RECEIVE_LOOP 
+018B C297             87      CLR DAT 
+018D 22               88      RET 
+                      89     ;延时子程序
+018E 757E50           90     LONG_DELAY: MOV TIMER,#80 
+0191 D57EFD           91     DELAY_LOOP: DJNZ TIMER,DELAY_LOOP 
+0194 22               92      RET 
+0195 757E06           93     SHORT_DELAY:MOV TIMER,#6 
+0198 D57EFD           94     SHORT_LP: DJNZ TIMER,SHORT_LP 
+019B 22               95      RET 
+                      96      END
+A51 MACRO ASSEMBLER  6_3                                                                  11/03/2024 10:53:22 PAGE     3
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+BIT_COUNT. . . . .  D ADDR   007FH   A   
+CLK. . . . . . . .  B ADDR   0090H.6 A   
+CS . . . . . . . .  B ADDR   00A0H.7 A   
+DAT. . . . . . . .  B ADDR   0090H.7 A   
+DATA_IN. . . . . .  D ADDR   0020H   A   
+DATA_OUT . . . . .  D ADDR   0021H   A   
+DELAY_LOOP . . . .  C ADDR   0191H   A   
+F0 . . . . . . . .  B ADDR   00D0H.5 A   
+KEY. . . . . . . .  B ADDR   0090H.3 A   
+LONG_DELAY . . . .  C ADDR   018EH   A   
+MAIN . . . . . . .  C ADDR   011BH   A   
+NEXTKEY. . . . . .  C ADDR   012AH   A   
+P1 . . . . . . . .  D ADDR   0090H   A   
+P2 . . . . . . . .  D ADDR   00A0H   A   
+RECEIVE. . . . . .  C ADDR   0170H   A   
+RECEIVE_LOOP . . .  C ADDR   0177H   A   
+SEND . . . . . . .  C ADDR   0152H   A   
+SEND_LOOP. . . . .  C ADDR   0159H   A   
+SHORT_DELAY. . . .  C ADDR   0195H   A   
+SHORT_LP . . . . .  C ADDR   0198H   A   
+SP . . . . . . . .  D ADDR   0081H   A   
+START. . . . . . .  C ADDR   0100H   A   
+START_DELAY. . . .  C ADDR   0109H   A   
+START_DELAY1 . . .  C ADDR   010CH   A   
+TEN. . . . . . . .  D ADDR   007CH   A   
+TIMER. . . . . . .  D ADDR   007EH   A   
+TIMER1 . . . . . .  D ADDR   007DH   A   
+WAIT . . . . . . .  C ADDR   014DH   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

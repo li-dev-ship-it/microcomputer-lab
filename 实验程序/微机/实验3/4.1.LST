@@ -1,0 +1,47 @@
+A51 MACRO ASSEMBLER  4_1                                                                  10/20/2024 01:06:05 PAGE     1
+
+
+MACRO ASSEMBLER A51 V7.08a
+OBJECT MODULE PLACED IN 4.1.OBJ
+ASSEMBLER INVOKED BY: C:\Keil\C51\BIN\A51.EXE 4.1.asm SET(SMALL) DEBUG EP
+
+LOC  OBJ            LINE     SOURCE
+
+                       1     
+0000                   2             ORG 0000H
+0000 0130              3             AJMP START
+0030                   4             ORG 0030H
+0030                   5             START:        ;³ÌÐò¿ªÊ¼µÄµØ·½ 
+0030 7590FF            6             MOV P1,#0FFH  ;P1¿ÚÈ«²¿Êä³ö1 £¨¸ßµçÆ½£©
+0033 758960            7             MOV TMOD,#60H ;¶¨Ê±Æ÷1¼ÆÊ·½Ê½ Ä£Ê½2  
+0036 758DFE            8             MOV TH1,#0FEH ;ÉèÖÃ³õÖµ 10´ÎÒç³ö
+0039 758BFE            9             MOV TL1,#0FEH
+003C D28E             10             SETB TR1       ;Æô¶¯¶¨Ê±Æ÷1 
+003E                  11             MLP1: 
+003E 308FFD           12             JNB TF1,MLP1   ;²éÑ¯Òç³ö±êÖ¾ Îª0Ô­µØµÈ´
+0041 B290             13             CPL P1.0       ;¸Ä±äP1.0¿Ú×´Ì¬
+0043 C28F             14             CLR TF1        ;Çå³ÖÐ¶Ï±êÖ¾
+0045 013E             15             AJMP MLP1       ;Ìø×ªµ½MLP1
+                      16             END
+A51 MACRO ASSEMBLER  4_1                                                                  10/20/2024 01:06:05 PAGE     2
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+MLP1 . . . . . . .  C ADDR   003EH   A   
+P1 . . . . . . . .  D ADDR   0090H   A   
+START. . . . . . .  C ADDR   0030H   A   
+TF1. . . . . . . .  B ADDR   0088H.7 A   
+TH1. . . . . . . .  D ADDR   008DH   A   
+TL1. . . . . . . .  D ADDR   008BH   A   
+TMOD . . . . . . .  D ADDR   0089H   A   
+TR1. . . . . . . .  B ADDR   0088H.6 A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

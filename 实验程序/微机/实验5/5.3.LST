@@ -1,0 +1,62 @@
+A51 MACRO ASSEMBLER  5_3                                                                  10/27/2024 12:24:10 PAGE     1
+
+
+MACRO ASSEMBLER A51 V7.08a
+OBJECT MODULE PLACED IN 5.3.OBJ
+ASSEMBLER INVOKED BY: C:\Keil\C51\BIN\A51.EXE 5.3.asm SET(SMALL) DEBUG EP
+
+LOC  OBJ            LINE     SOURCE
+
+0000                   1     ORG 0000H             ; ³ÌÐòÈë¿ÚµØÖ·
+0000 020030            2     LJMP START            ; Ìø×ªµ½Ö÷³ÌÐò¿ªÊ¼Î»ÖÃ
+0030                   3     ORG 0030H             ; Ö÷³ÌÐòµØÖ·
+0030                   4     START: 
+0030 758160            5            MOV SP,#60H    ; ÉèÖÃÕ»Ö¸ÕëÎª0x60
+0033 7801              6            MOV R0,#01H    ; ³õÊ¼»¯¼Ä´æÆ÷R0Îª0x01£¬ÓÃÓÚ¼ÇÂ¼LED×´Ì¬
+0035 759850            7            MOV SCON,#01010000B ; ÉèÖÃ´®¿ÚÎªÄ£Ê½1£¬8Î»´®ÐÐÍ¨ÐÅ
+0038 758920            8            MOV TMOD,#20H  ; ¶¨Ê±Æ÷1¹¤×÷ÔÚÄ£Ê½2£¬8Î»×Ô¶¯ÖØ×°Ä£Ê½
+003B 438780            9            ORL PCON,#10000000B ; ÉèÖÃ²¨ÌØÂÊÎª±ê×¼Ä£Ê½µÄÁ½±¶
+003E 758DF3           10            MOV TH1,#0F3H  ; ÉèÖÃ¶¨Ê±Æ÷1µÄ¸ßÎ»£¬¿ØÖÆ²¨ÌØÂÊ
+0041 758BF3           11            MOV TL1,#0F3H  ; ÉèÖÃ¶¨Ê±Æ÷1µÄµÍÎ»£¬¿ØÖÆ²¨ÌØÂÊ
+0044 D28E             12            SETB TR1       ; Æô¶¯¶¨Ê±Æ÷1
+                      13     
+0046                  14     AGAIN: 
+0046 3098FD           15            JNB RI,$       ; µÈ´½ÓÊÕÊ¾Ý£¬¼ì²â½ÓÊÕÖÐ¶Ï±êÖ¾Î»RI
+0049 C298             16            CLR RI         ; Çå³½ÓÊÕ±êÖ¾Î»RI
+004B E599             17            MOV A,SBUF     ; ½«½ÓÊÕµÄÊ¾Ý´æÈëÀÛ¼ÓÆ÷A
+004D E8               18            MOV A,R0       ; ½«¼Ä´æÆ÷R0µÄÄÚÈÝÒÆ¶¯µ½ÀÛ¼ÓÆ÷A£¬¿ØÖÆLED×´Ì¬
+004E 23               19            RL A           ; ½«ÀÛ¼ÓÆ÷AÄÚÈÝÑ­»·×óÒÆÒ»Î»£¬ÊµÏÖLED×óÒÆÐ§¹û
+004F F590             20            MOV P1,A       ; ½«ÀÛ¼ÓÆ÷AµÄÄÚÈÝÊä³öµ½P1¿Ú£¬¿ØÖÆLED
+0051 F8               21            MOV R0,A       ; ±£´æÐÂµÄLED×´Ì¬µ½R0
+0052 F599             22            MOV SBUF,A     ; ½«½ÓÊÕµÄÊ¾Ý·¢ËÍ»Ø´®¿Ú
+0054 3099FD           23            JNB TI,$       ; µÈ´·¢ËÍÍê³É£¬¼ì²â·¢ËÍÖÐ¶Ï±êÖ¾Î»TI
+0057 C299             24            CLR TI         ; Çå³·¢ËÍ±êÖ¾Î»TI
+0059 80EB             25            SJMP AGAIN     ; ·µ»ØµÈ´½ÓÊÕÐÂµÄÊ¾Ý
+                      26     END                   ; ³ÌÐò½áÊø
+A51 MACRO ASSEMBLER  5_3                                                                  10/27/2024 12:24:10 PAGE     2
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+AGAIN. . . . . . .  C ADDR   0046H   A   
+P1 . . . . . . . .  D ADDR   0090H   A   
+PCON . . . . . . .  D ADDR   0087H   A   
+RI . . . . . . . .  B ADDR   0098H.0 A   
+SBUF . . . . . . .  D ADDR   0099H   A   
+SCON . . . . . . .  D ADDR   0098H   A   
+SP . . . . . . . .  D ADDR   0081H   A   
+START. . . . . . .  C ADDR   0030H   A   
+TH1. . . . . . . .  D ADDR   008DH   A   
+TI . . . . . . . .  B ADDR   0098H.1 A   
+TL1. . . . . . . .  D ADDR   008BH   A   
+TMOD . . . . . . .  D ADDR   0089H   A   
+TR1. . . . . . . .  B ADDR   0088H.6 A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

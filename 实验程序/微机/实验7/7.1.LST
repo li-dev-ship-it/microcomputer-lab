@@ -1,0 +1,53 @@
+A51 MACRO ASSEMBLER  7_1                                                                  11/10/2024 12:05:05 PAGE     1
+
+
+MACRO ASSEMBLER A51 V7.08a
+OBJECT MODULE PLACED IN 7.1.OBJ
+ASSEMBLER INVOKED BY: C:\Keil\C51\BIN\A51.EXE 7.1.asm SET(SMALL) DEBUG EP
+
+LOC  OBJ            LINE     SOURCE
+
+0000                   1     ORG 0000H
+0000 020100            2                 LJMP MAIN
+0100                   3                 ORG 0100H
+0100 7590FF            4     MAIN:   MOV P1, #0FFH
+0103 7D0A              5     NEXT:   MOV R5, #10
+0105 90FE03            6                     MOV DPTR, #0FE03H
+0108 7400              7             MOV A, #00H
+010A F0                8                     MOVX @DPTR, A
+010B DDFE              9     LOOP:   DJNZ R5, LOOP
+010D 20B3FD           10     WAIT:   JB P3.3, WAIT
+0110 E0               11             MOVX A, @DPTR
+0111 F4               12                     CPL A
+0112 F590             13                     MOV P1, A
+0114 120119           14                     LCALL DELAY
+0117 80EA             15                     SJMP NEXT
+0119 7F30             16     DELAY: MOV R7, #30H
+011B 7EF0             17     DLP1:  MOV R6, #0F0H
+011D DEFE             18     DLP2:  DJNZ R6, DLP2
+011F DFFA             19                DJNZ R7, DLP1
+0121 22               20                RET
+                      21            END
+A51 MACRO ASSEMBLER  7_1                                                                  11/10/2024 12:05:05 PAGE     2
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+DELAY. . . . . . .  C ADDR   0119H   A   
+DLP1 . . . . . . .  C ADDR   011BH   A   
+DLP2 . . . . . . .  C ADDR   011DH   A   
+LOOP . . . . . . .  C ADDR   010BH   A   
+MAIN . . . . . . .  C ADDR   0100H   A   
+NEXT . . . . . . .  C ADDR   0103H   A   
+P1 . . . . . . . .  D ADDR   0090H   A   
+P3 . . . . . . . .  D ADDR   00B0H   A   
+WAIT . . . . . . .  C ADDR   010DH   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

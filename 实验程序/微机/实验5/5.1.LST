@@ -1,0 +1,56 @@
+A51 MACRO ASSEMBLER  5_1                                                                  10/27/2024 12:21:05 PAGE     1
+
+
+MACRO ASSEMBLER A51 V7.08a
+OBJECT MODULE PLACED IN 5.1.OBJ
+ASSEMBLER INVOKED BY: C:\Keil\C51\BIN\A51.EXE 5.1.asm SET(SMALL) DEBUG EP
+
+LOC  OBJ            LINE     SOURCE
+
+0000                   1     ORG 0000H             ; ³ÌÐòÈë¿ÚµØÖ·
+0000 020030            2     LJMP START            ; Ìø×ªµ½Ö÷³ÌÐò¿ªÊ¼Î»ÖÃ
+0030                   3     ORG 0030H             ; Ö÷³ÌÐòµØÖ·
+0030                   4     START: 
+0030 758160            5            MOV SP,#60H    ; ÉèÖÃÕ»Ö¸ÕëÎª0x60£¬³õÊ¼»¯¶ÑÕ»Î»ÖÃ
+0033 759850            6            MOV SCON,#01010000B ; ÉèÖÃ´®¿ÚÎªÄ£Ê½1£¬8Î»´®ÐÐÍ¨ÐÅ
+0036 758920            7            MOV TMOD,#20H  ; ¶¨Ê±Æ÷1¹¤×÷ÔÚÄ£Ê½2£¬8Î»×Ô¶¯ÖØ×°Ä£Ê½
+0039 438780            8            ORL PCON,#10000000B ; ÉèÖÃ²¨ÌØÂÊÎª±ê×¼Ä£Ê½µÄÁ½±¶
+003C 758DF3            9            MOV TH1,#0F3H  ; ÉèÖÃ¶¨Ê±Æ÷1µÄ¸ßÎ»£¬¿ØÖÆ²¨ÌØÂÊ
+003F 758BF3           10            MOV TL1,#0F3H  ; ÉèÖÃ¶¨Ê±Æ÷1µÄµÍÎ»£¬¿ØÖÆ²¨ÌØÂÊ
+0042 D28E             11            SETB TR1       ; Æô¶¯¶¨Ê±Æ÷1
+                      12     
+0044                  13     AGAIN: 
+0044 3098FD           14            JNB RI,$       ; µÈ´½ÓÊÕµ½Ê¾Ý£¬¼ì²â½ÓÊÕÖÐ¶Ï±êÖ¾Î»RI
+0047 C298             15            CLR RI         ; Çå³½ÓÊÕ±êÖ¾Î»RI
+0049 E599             16            MOV A,SBUF     ; ½«½ÓÊÕµ½µÄÊ¾Ý´æÈëÀÛ¼ÓÆ÷A
+004B F599             17            MOV SBUF,A     ; ½«ÀÛ¼ÓÆ÷AµÄÊ¾Ý·¢ËÍ»Ø´®¿Ú£¬ÊµÏÖ»ØÏÔ
+004D 3099FD           18            JNB TI,$       ; µÈ´·¢ËÍÍê³É£¬¼ì²â·¢ËÍÖÐ¶Ï±êÖ¾Î»TI
+0050 C299             19            CLR TI         ; Çå³·¢ËÍ±êÖ¾Î»TI
+0052 80F0             20            SJMP AGAIN     ; ·µ»ØµÈ´½ÓÊÕÐÂµÄÊ¾Ý
+                      21     END                   ; ³ÌÐò½áÊø
+A51 MACRO ASSEMBLER  5_1                                                                  10/27/2024 12:21:05 PAGE     2
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+AGAIN. . . . . . .  C ADDR   0044H   A   
+PCON . . . . . . .  D ADDR   0087H   A   
+RI . . . . . . . .  B ADDR   0098H.0 A   
+SBUF . . . . . . .  D ADDR   0099H   A   
+SCON . . . . . . .  D ADDR   0098H   A   
+SP . . . . . . . .  D ADDR   0081H   A   
+START. . . . . . .  C ADDR   0030H   A   
+TH1. . . . . . . .  D ADDR   008DH   A   
+TI . . . . . . . .  B ADDR   0098H.1 A   
+TL1. . . . . . . .  D ADDR   008BH   A   
+TMOD . . . . . . .  D ADDR   0089H   A   
+TR1. . . . . . . .  B ADDR   0088H.6 A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

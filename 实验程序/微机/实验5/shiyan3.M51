@@ -1,0 +1,71 @@
+BL51 BANKED LINKER/LOCATER V5.03                                                        10/27/2024  12:24:11  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V5.03, INVOKED BY:
+C:\KEIL\C51\BIN\BL51.EXE 5.3.obj TO shiyan3 RAMSIZE (256)
+
+
+INPUT MODULES INCLUDED:
+  5.3.obj (5_3)
+
+
+LINK MAP OF MODULE:  shiyan3 (5_3)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     005BH     ABSOLUTE     
+
+
+
+SYMBOL TABLE OF MODULE:  shiyan3 (5_3)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        5_3
+  C:0046H         SYMBOL        AGAIN
+  D:0090H         SYMBOL        P1
+  D:0087H         SYMBOL        PCON
+  B:0098H.0       SYMBOL        RI
+  D:0099H         SYMBOL        SBUF
+  D:0098H         SYMBOL        SCON
+  D:0081H         SYMBOL        SP
+  C:0030H         SYMBOL        START
+  D:008DH         SYMBOL        TH1
+  B:0098H.1       SYMBOL        TI
+  D:008BH         SYMBOL        TL1
+  D:0089H         SYMBOL        TMOD
+  B:0088H.6       SYMBOL        TR1
+  C:0000H         LINE#         2
+  C:0030H         LINE#         5
+  C:0033H         LINE#         6
+  C:0035H         LINE#         7
+  C:0038H         LINE#         8
+  C:003BH         LINE#         9
+  C:003EH         LINE#         10
+  C:0041H         LINE#         11
+  C:0044H         LINE#         12
+  C:0046H         LINE#         15
+  C:0049H         LINE#         16
+  C:004BH         LINE#         17
+  C:004DH         LINE#         18
+  C:004EH         LINE#         19
+  C:004FH         LINE#         20
+  C:0051H         LINE#         21
+  C:0052H         LINE#         22
+BL51 BANKED LINKER/LOCATER V5.03                                                      10/27/2024  12:24:11  PAGE 2
+
+
+  C:0054H         LINE#         23
+  C:0057H         LINE#         24
+  C:0059H         LINE#         25
+  -------         ENDMOD        5_3
+
+Program Size: data=8.0 xdata=0 code=91
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

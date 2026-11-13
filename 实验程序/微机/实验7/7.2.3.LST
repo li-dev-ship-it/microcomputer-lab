@@ -1,0 +1,52 @@
+A51 MACRO ASSEMBLER  7_2_3                                                                11/10/2024 15:21:47 PAGE     1
+
+
+MACRO ASSEMBLER A51 V7.08a
+OBJECT MODULE PLACED IN 7.2.3.OBJ
+ASSEMBLER INVOKED BY: C:\Keil\C51\BIN\A51.EXE 7.2.3.asm SET(SMALL) DEBUG EP
+
+LOC  OBJ            LINE     SOURCE
+
+  FEFF                 1     DAPORT EQU 0FEFFH
+0000                   2             ORG 0000H
+0000 2100              3             AJMP START
+0100                   4             ORG 0100H
+0100 90FEFF            5             START: MOV DPTR, #DAPORT
+0103 7400              6             MOV A, #00H
+0105 7803              7     LOOP1:MOV R0,#3
+0107 F0                8             DLP1: MOVX @DPTR,A
+0108 04                9             INC A
+0109 B4FFFB           10             CJNE A, #0FFH,DLP1
+010C 14               11             DLP2: DEC A
+010D F0               12             MOVX @DPTR,A
+010E B400FB           13             CJNE A, #00H,DLP2
+0111 D8F4             14             DJNZ R0,DLP1
+0113 7A03             15     LOOP2:MOV R2, #3
+0115 F0               16             D1:MOVX @DPTR, A 
+0116 04               17             INC A
+0117 B4FFFB           18             CJNE A, #0FFH, D1
+011A DAF9             19             DJNZ R2, D1
+011C 80E7             20             SJMP LOOP1
+                      21             END
+                             
+A51 MACRO ASSEMBLER  7_2_3                                                                11/10/2024 15:21:47 PAGE     2
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+D1 . . . . . . . .  C ADDR   0115H   A   
+DAPORT . . . . . .  N NUMB   FEFFH   A   
+DLP1 . . . . . . .  C ADDR   0107H   A   
+DLP2 . . . . . . .  C ADDR   010CH   A   
+LOOP1. . . . . . .  C ADDR   0105H   A   
+LOOP2. . . . . . .  C ADDR   0113H   A   
+START. . . . . . .  C ADDR   0100H   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

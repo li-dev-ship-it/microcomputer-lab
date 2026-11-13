@@ -1,0 +1,72 @@
+A51 MACRO ASSEMBLER  2                                                                    10/20/2024 18:09:53 PAGE     1
+
+
+MACRO ASSEMBLER A51 V7.08a
+OBJECT MODULE PLACED IN 2.OBJ
+ASSEMBLER INVOKED BY: C:\Keil\C51\BIN\A51.EXE 2.ASM SET(SMALL) DEBUG EP
+
+LOC  OBJ            LINE     SOURCE
+
+                       1     
+0000                   2                             ORG     0000H
+0000 020030            3                             LJMP    START
+0003                   4                             ORG     0003H
+0003 020041            5                             LJMP    EINT0
+0013                   6                             ORG     0013H
+0013 020050            7                             LJMP    EINT1
+0030                   8                             ORG     0030H
+0030 74FC              9     START:                  MOV     A, #11111100B
+0032 7590FF           10                             MOV     P1, #0FFH
+0035 D288             11                             SETB    IT0
+0037 D2A8             12                             SETB    EX0
+0039 D28A             13                             SETB    IT1
+003B D2AA             14                             SETB    EX1
+003D D2AF             15                             SETB    EA
+003F 80FE             16                             SJMP    $
+0041 7F04             17     EINT0:          MOV     R7, #04H
+0043 759000           18     ELP0:           MOV     P1, #00H
+0046 1155             19                             ACALL   DELAY
+0048 7590FF           20     MOV     P1, #0FFH
+004B 1155             21                             ACALL   DELAY
+004D DFF4             22                             DJNZ    R7, ELP0
+004F 32               23                             RETI
+0050 F590             24     EINT1:                  MOV     P1, A
+0052 23               25                             RL              A
+0053 23               26                             RL              A
+0054 32               27                             RETI
+0055 7C04             28     DELAY:          MOV  R4,#4
+0057 7EFF             29     DELAY1:         MOV  R6,#0FFH
+0059 7DFF             30     DLP1:           MOV  R5,#0FFH
+005B DDFE             31     DLP2:           DJNZ  R5,DLP2
+005D DEFA             32                             DJNZ  R6,DLP1
+005F DCF6             33                             DJNZ  R4,DELAY1
+0061 22               34                             RET
+                      35                             END
+A51 MACRO ASSEMBLER  2                                                                    10/20/2024 18:09:53 PAGE     2
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+DELAY. . . . . . .  C ADDR   0055H   A   
+DELAY1 . . . . . .  C ADDR   0057H   A   
+DLP1 . . . . . . .  C ADDR   0059H   A   
+DLP2 . . . . . . .  C ADDR   005BH   A   
+EA . . . . . . . .  B ADDR   00A8H.7 A   
+EINT0. . . . . . .  C ADDR   0041H   A   
+EINT1. . . . . . .  C ADDR   0050H   A   
+ELP0 . . . . . . .  C ADDR   0043H   A   
+EX0. . . . . . . .  B ADDR   00A8H.0 A   
+EX1. . . . . . . .  B ADDR   00A8H.2 A   
+IT0. . . . . . . .  B ADDR   0088H.0 A   
+IT1. . . . . . . .  B ADDR   0088H.2 A   
+P1 . . . . . . . .  D ADDR   0090H   A   
+START. . . . . . .  C ADDR   0030H   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

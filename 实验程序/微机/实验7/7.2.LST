@@ -1,0 +1,38 @@
+A51 MACRO ASSEMBLER  7_2                                                                  11/03/2024 11:29:52 PAGE     1
+
+
+MACRO ASSEMBLER A51 V7.08a
+OBJECT MODULE PLACED IN 7.2.OBJ
+ASSEMBLER INVOKED BY: C:\Keil\C51\BIN\A51.EXE 7.2.asm SET(SMALL) DEBUG EP
+
+LOC  OBJ            LINE     SOURCE
+
+                       1     
+  FEFF                 2     DAPORT EQU  0FEFFH
+0000                   3                      ORG 0000H
+0000 2100              4                      AJMP START
+0100                   5                      ORG 0100H
+0100 90FEFF            6     START:  MOV DPTR, #DAPORT
+0103 7400              7                      MOV A, #00H
+0105 F0                8     DLP1:    MOVX @DPTR, A
+0106 04                9                      INC A
+0107 80FC             10              SJMP DLP1
+                      11                      END
+                             
+A51 MACRO ASSEMBLER  7_2                                                                  11/03/2024 11:29:52 PAGE     2
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+DAPORT . . . . . .  N NUMB   FEFFH   A   
+DLP1 . . . . . . .  C ADDR   0105H   A   
+START. . . . . . .  C ADDR   0100H   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

@@ -1,0 +1,77 @@
+BL51 BANKED LINKER/LOCATER V5.03                                                        10/20/2024  01:08:38  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V5.03, INVOKED BY:
+C:\KEIL\C51\BIN\BL51.EXE 3.3.obj TO 3
+
+
+INPUT MODULES INCLUDED:
+  3.3.obj (3_3)
+
+
+LINK MAP OF MODULE:  3 (3_3)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0072H     ABSOLUTE     
+
+
+
+SYMBOL TABLE OF MODULE:  3 (3_3)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        3_3
+  C:0062H         SYMBOL        DISP
+  D:00A8H         SYMBOL        IE
+  C:0066H         SYMBOL        IT11
+  C:004AH         SYMBOL        LOOP1
+  C:0055H         SYMBOL        LOOP2
+  D:0090H         SYMBOL        P1
+  C:0030H         SYMBOL        START
+  D:008DH         SYMBOL        TH1
+  D:008BH         SYMBOL        TL1
+  D:0089H         SYMBOL        TMOD
+  B:0088H.6       SYMBOL        TR1
+  C:0000H         LINE#         3
+  C:001BH         LINE#         5
+  C:0030H         LINE#         8
+  C:0033H         LINE#         9
+  C:0035H         LINE#         10
+  C:0037H         LINE#         11
+  C:0039H         LINE#         12
+  C:003CH         LINE#         13
+  C:003FH         LINE#         14
+  C:0042H         LINE#         15
+  C:0045H         LINE#         16
+  C:0048H         LINE#         17
+  C:004AH         LINE#         20
+  C:004DH         LINE#         21
+  C:004FH         LINE#         22
+  C:0050H         LINE#         23
+  C:0053H         LINE#         24
+  C:0055H         LINE#         27
+  C:0056H         LINE#         28
+BL51 BANKED LINKER/LOCATER V5.03                                                      10/20/2024  01:08:38  PAGE 2
+
+
+  C:0057H         LINE#         29
+  C:0062H         LINE#         33
+  C:0064H         LINE#         34
+  C:0066H         LINE#         37
+  C:0068H         LINE#         38
+  C:0069H         LINE#         39
+  C:006CH         LINE#         40
+  C:006FH         LINE#         41
+  C:0071H         LINE#         42
+  -------         ENDMOD        3_3
+
+Program Size: data=8.0 xdata=0 code=114
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

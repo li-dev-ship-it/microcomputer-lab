@@ -1,0 +1,80 @@
+A51 MACRO ASSEMBLER  5_2                                                                  10/27/2024 12:22:37 PAGE     1
+
+
+MACRO ASSEMBLER A51 V7.08a
+OBJECT MODULE PLACED IN 5.2.OBJ
+ASSEMBLER INVOKED BY: C:\Keil\C51\BIN\A51.EXE 5.2.asm SET(SMALL) DEBUG EP
+
+LOC  OBJ            LINE     SOURCE
+
+0000                   1     ORG 0000H             ; ³ÌÐòÈë¿ÚµØÖ·
+0000 020030            2     LJMP START            ; Ìø×ªµ½Ö÷³ÌÐò¿ªÊ¼Î»ÖÃ
+0030                   3     ORG 0030H             ; Ö÷³ÌÐòµØÖ·
+0030                   4     START: 
+0030 758160            5            MOV SP,#60H    ; ÉèÖÃÕ»Ö¸ÕëÎª0x60
+0033 759850            6            MOV SCON,#01010000B ; ÉèÖÃ´®¿ÚÎªÄ£Ê½1£¬8Î»´®ÐÐÍ¨ÐÅ
+0036 758920            7            MOV TMOD,#20H  ; ¶¨Ê±Æ÷1¹¤×÷ÔÚÄ£Ê½2£¬8Î»×Ô¶¯ÖØ×°Ä£Ê½
+0039 438780            8            ORL PCON,#10000000B ; ÉèÖÃ²¨ÌØÂÊÎª±ê×¼Ä£Ê½µÄÁ½±¶
+003C 758DF3            9            MOV TH1,#0F3H  ; ÉèÖÃ¶¨Ê±Æ÷1µÄ¸ßÎ»£¬¿ØÖÆ²¨ÌØÂÊ
+003F 758BF3           10            MOV TL1,#0F3H  ; ÉèÖÃ¶¨Ê±Æ÷1µÄµÍÎ»£¬¿ØÖÆ²¨ÌØÂÊ
+0042 D28E             11            SETB TR1       ; Æô¶¯¶¨Ê±Æ÷1
+                      12     
+0044 780F             13            MOV R0,#15     ; R0ÓÃÓÚ¼ÇÂ¼¼´½«·¢ËÍµÄ×Ö·û´®×Ö·ûÊÁ¿
+0046 7900             14            MOV R1,#00H    ; R1³õÊ¼»¯Îª0£¬×÷Îª×Ö·û±íµÄÆ«ÒÆµØÖ·
+0048 7AFE             15            MOV R2,#11111110B ; R2ÓÃÓÚ³õÊ¼»¯LED×´Ì¬
+004A EA               16            MOV A,R2       ; ½«R2µÄÄÚÈÝÔØÈëÀÛ¼ÓÆ÷A
+004B F590             17            MOV P1,A       ; ½«ÀÛ¼ÓÆ÷AµÄÄÚÈÝÊä³öµ½P1¿Ú£¬³õÊ¼»¯LED
+004D E4               18            CLR A          ; Çå¿ÕÀÛ¼ÓÆ÷A
+004E 900069           19            MOV DPTR,#ACTAB ; ½«DPTRÖ¸Ïò×Ö·û±íACTABµÄÊ×µØÖ·
+                      20     
+0051                  21     AGAIN: 
+0051 3098FD           22            JNB RI,$       ; µÈ´½ÓÊÕÊ¾Ý£¬¼ì²â½ÓÊÕÖÐ¶Ï±êÖ¾Î»RI
+0054 C298             23            CLR RI         ; Çå³½ÓÊÕ±êÖ¾Î»RI
+0056 E599             24            MOV A,SBUF     ; ½«½ÓÊÕµÄÊ¾Ý´æÈëÀÛ¼ÓÆ÷A
+0058 B454F6           25            CJNE A,#'T',AGAIN ; ±È½Ï½ÓÊÕµ½µÄ×Ö·ûÊÇ·ñÎª'T'£¬Èô²»ÊÇÔò¼ÌÐøµÈ´
+                      26     
+005B E4               27            CLR A          ; Çå¿ÕÀÛ¼ÓÆ÷AÒÔ±ã¿ªÊ¼·¢ËÍ×Ö·û´®
+005C                  28     LOOP:  
+005C E9               29            MOV A,R1       ; ½«R1µÄÄÚÈÝÔØÈëÀÛ¼ÓÆ÷A£¬ÓÃÓÚ¶ÁÈ¡×Ö·û±íÆ«ÒÆÁ¿
+005D 93               30            MOVC A,@A+DPTR ; ´Ó×Ö·û±í¶ÁÈ¡Ò»¸ö×Ö·û
+005E F599             31            MOV SBUF,A     ; ½«¶ÁÈ¡µÄ×Ö·û·¢ËÍµ½´®¿Ú
+0060 3099FD           32            JNB TI,$       ; µÈ´·¢ËÍÍê³É£¬¼ì²â·¢ËÍÖÐ¶Ï±êÖ¾Î»TI
+0063 C299             33            CLR TI         ; Çå³·¢ËÍ±êÖ¾Î»TI
+0065 D8F5             34            DJNZ R0,LOOP   ; µÝ¼õR0¼ÆÊÆ÷£¬Ö±µ½R0Îª0£¬±íÊ¾·¢ËÍÍê³É
+                      35     
+0067 80E8             36            SJMP AGAIN     ; ·µ»ØµÈ´½ÓÊÕÐÂµÄÊ¾Ý
+                      37     
+0069 57656C63         38     ACTAB: DB 'Welcome to cumt' ; ×Ö·û±í£¬´æ´¢"Welcome to cumt"
+006D 6F6D6520                
+0071 746F2063                
+0075 756D74                  
+                      39     END                   ; ³ÌÐò½áÊø
+A51 MACRO ASSEMBLER  5_2                                                                  10/27/2024 12:22:37 PAGE     2
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+ACTAB. . . . . . .  C ADDR   0069H   A   
+AGAIN. . . . . . .  C ADDR   0051H   A   
+LOOP . . . . . . .  C ADDR   005CH   A   
+P1 . . . . . . . .  D ADDR   0090H   A   
+PCON . . . . . . .  D ADDR   0087H   A   
+RI . . . . . . . .  B ADDR   0098H.0 A   
+SBUF . . . . . . .  D ADDR   0099H   A   
+SCON . . . . . . .  D ADDR   0098H   A   
+SP . . . . . . . .  D ADDR   0081H   A   
+START. . . . . . .  C ADDR   0030H   A   
+TH1. . . . . . . .  D ADDR   008DH   A   
+TI . . . . . . . .  B ADDR   0098H.1 A   
+TL1. . . . . . . .  D ADDR   008BH   A   
+TMOD . . . . . . .  D ADDR   0089H   A   
+TR1. . . . . . . .  B ADDR   0088H.6 A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

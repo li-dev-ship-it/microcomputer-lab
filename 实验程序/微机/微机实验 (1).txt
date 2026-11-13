@@ -1,0 +1,936 @@
+一、实验一
+1.源程序
+      ORG  	0000H 
+ 	LJMP  	MAIN 
+ 	ORG  	0100H 
+MAIN:  MOV  	DPTR, #ACTAB  
+       MOV  	A, R7  
+       ANL  	A, #0FH  
+       MOVC     A, @A+DPTR  
+       MOV  	R5, A  
+       MOV  	A, R7 
+       ANL  	A, #0F0H  
+       SWAP     A  
+       MOVC     A, @A+DPTR  
+       MOV  	R6, A  
+       SJMP  	MAIN  
+ACTAB: DB 30H, 31H, 32H, 33H, 34H 
+       DB 35H, 36H, 37H, 38H, 39H 
+       DB 41H, 42H, 43H, 44H, 45H, 46H 
+       END 
+
+2.修改
+ORG 0000H
+LJMP MAIN
+ORG 0100H
+MAIN: MOV R0,#30h
+MOV R7,#09H
+LP1: MOV A,R7
+MOV R6,A
+MOV A,R0
+MOV R1,A
+INC R1
+LP2: MOV A,@R0
+CLR C
+SUBB A,@R1
+JNC LP3
+MOV A,@R0
+XCH A,@R1
+MOV @R0,A
+LP3: INC R1
+DJNZ R6,LP2
+INC R0
+DJNZ R7,LP1
+SJMP $
+END
+
+
+二、实验二
+1.源程序
+ORG 0000H
+LJMP START
+ORG 0003H
+LJMP EINT0
+ORG 0013H
+ORG 0030H
+START: MOV P1,#0FFH
+SETB IT0
+SETB EX0
+SETB IT1
+SETB EX1
+SETB EA
+SJMP $
+EINT0: MOV R7,#04H
+ELP0: MOV P1,#00H
+ACALL DELAY
+MOV P1,#0FFH
+ACALL DELAY
+DJNZ R7,ELP0
+RETI
+ILP1: MOV P1,A
+RL A
+RETI
+DELAY: MOV R4,#4
+DELAY1: MOV R6,#0FFH
+DLP1: MOV R5,#0FFH
+DLP2: DJNZ R5,DLP2
+DJNZ R6,DLP1
+DJNZ R4,DELAY1
+RET
+END
+
+2.修改
+			ORG 	0000H
+			LJMP 	START
+			ORG 	0003H
+			LJMP 	EINT0
+			ORG 	0013H
+			LJMP 	EINT1
+			ORG 	0030H
+START: 			MOV 	A, #11111100B
+			MOV 	P1, #0FFH
+			SETB 	IT0
+			SETB 	EX0
+			SETB 	IT1
+			SETB 	EX1
+			SETB 	EA
+			SJMP 	$
+EINT0: 		MOV 	R7, #04H
+ELP0:		MOV 	P1, #00H
+			ACALL 	DELAY
+MOV 	P1, #0FFH
+			ACALL 	DELAY
+			DJNZ 	R7, ELP0
+			RETI
+EINT1:			MOV 	P1, A
+			RL 		A
+			RL 		A
+			RETI
+DELAY:		MOV  R4,#4
+DELAY1:		MOV  R6,#0FFH
+DLP1:		MOV  R5,#0FFH
+DLP2:		DJNZ  R5,DLP2
+			DJNZ  R6,DLP1
+			DJNZ  R4,DELAY1
+			RET
+			END
+
+三、实验三
+1.计数源程序
+	ORG 0000H
+	AJMP START
+	ORG 0030H
+	START:        ;程序开始的地方 
+	MOV P1,#0FFH  ;P1口全部输出1 （高电平）
+	MOV TMOD,#60H ;定时器1计数方式 模式2  
+	MOV TH1,#0F6H ;设置初值 10次溢出
+	MOV TL1,#0F6H
+	SETB TR1       ;启动定时器1 
+	MLP1: 
+	JNB TF1,MLP1   ;查询溢出标志 为0原地等待
+	CPL P1.0       ;改变P1.0口状态
+	CLR TF1        ;清除中断标志
+	AJMP MLP1       ;跳转到MLP1
+	END
+
+2.定时源程序
+	ORG 0000H
+	AJMP START
+	ORG 001BH
+	AJMP IT11      ;定时器1中断入口
+	ORG 0030H
+	START:         ;主程序入口
+	MOV P1, #0FFH       ;P1口输出高电平
+	MOV A, #11111010B  
+	MOV R1, #3
+	MOV R0, #14H       ;十进制为20 乘以定时时间50ms 即总定时时间为1秒    
+	ANL TMOD, #0FH   ;TMOD高四位清零   
+	ORL TMOD, #10H   ;TMOD第四位置1  定时器1为定时方式且为模式1
+	MOV TL1, #0FEH
+	MOV TH1, #4BH       ;设置初值 (（10000H-4BFEH）*12/11.0592)us=定时时间 
+	ORL IE, #88H        ;EA、ET1置1 开启中断
+	SETB TR1           ;启动定时器
+	
+	LOOP1: 
+	CJNE R0, #00H, DISP    ;定时时间到顺序执行 否则跳转到DISP  
+	MOV R0, #14H           ;重新给R0赋值  
+	INC R1                 ;R1自动加1
+	CJNE R1, #0BH, LOOP2   ;限值R1 加到0BH后又回到03H 
+	MOV R1, #3
+	LOOP2: 
+	
+	MOV A, R1      
+	MOVC A,@A+PC  ;变址寻址 找到对应要点亮的二极管数据
+	LJMP DISP
+	
+	DB 0FAH, 0F5H, 0AFH, 5FH, 0AAH, 55H, 00H, 0FFH
+		
+	DISP: MOV P1, A
+	JMP LOOP1
+	
+	IT11:
+	CLR TR1          ;关闭定时器
+	DEC R0         ;自动减一
+	MOV TL1, #0FEH ;重置初值
+	MOV TH1, #4BH
+	SETB TR1          ;启动定时器
+	RETI
+	
+	END
+
+3.定时器修改为2s
+ORG 0000H
+	AJMP START
+	ORG 001BH
+	AJMP IT11      ;定时器1中断入口
+	ORG 0030H
+	START:         ;主程序入口
+	MOV P1, #0FFH       ;P1口输出高电平
+	MOV A, #11111010B  
+	MOV R1, #3
+	MOV R0, #40      ;直接写十进制为40 乘以50ms 即定时时间为2秒    
+	ANL TMOD, #0FH   ;TMOD高四位清零   
+	ORL TMOD, #10H   ;TMOD第四位置1  定时器1定时方式 模式1
+	MOV TL1, #0FEH
+	MOV TH1, #4BH       ;设置初值 (（10000H-4BFEH）*12/11.0592)us=定时时间 
+	ORL IE, #88H        ;开启中断
+	SETB TR1           ;启动定时器
+	
+	LOOP1: 
+	CJNE R0, #00H, DISP    ;定时时间到顺序执行 否则跳转到DISP  
+	MOV R0, #40           ;重新给R0赋值  
+	INC R1                 ;R1自动加1
+	CJNE R1, #0BH, LOOP2   ;限值R1 加到0BH后又回到03H 
+	MOV R1, #3
+	LOOP2: 
+	
+	MOV A, R1      
+	MOVC A,@A+PC  ;变址寻址 找到对应要点亮的二极管数据
+	LJMP DISP
+	
+	DB 0FAH, 0F5H, 0AFH, 5FH, 0AAH, 55H, 00H, 0FFH
+		
+	DISP: MOV P1, A
+	JMP LOOP1
+	
+	IT11:
+	CLR TR1          ;关闭定时器
+	DEC R0         ;自动减一
+	MOV TL1, #0FEH ;重置初值
+	MOV TH1, #4BH
+	SETB TR1          ;启动定时器
+	RETI
+	
+	END
+
+4.定时器修改为0.02s
+ORG 0000H
+	AJMP START
+	ORG 001BH
+	AJMP IT11      ;定时器1中断入口
+	ORG 0030H
+	START:         ;主程序入口
+	MOV P1, #0FFH       ;P1口输出高电平
+	MOV A, #11111010B  
+	MOV R1, #3
+	MOV R0, #2     ;直接写十进制为2 乘以10ms 即定时时间为0.02秒    
+	ANL TMOD, #0FH   ;TMOD高四位清零   
+	ORL TMOD, #10H   ;TMOD第四位置1  定时器1定时方式 模式1
+	MOV TL1, #00H
+	MOV TH1, #0DCH       ;设置初值 (（10000H-DC00H）*12/11.0592)us=定时时间 定时10ms
+	ORL IE, #88H        ;开启中断
+	SETB TR1           ;启动定时器
+	
+	LOOP1: 
+	CJNE R0, #00H, DISP    ;定时时间到顺序执行 否则跳转到DISP  
+	MOV R0, #2            ;重新给R0赋值  
+	INC R1                 ;R1自动加1
+	CJNE R1, #0BH, LOOP2   ;限值R1 加到0BH后又回到03H 
+	MOV R1, #3
+	LOOP2: 
+	
+	MOV A, R1      
+	MOVC A,@A+PC  ;变址寻址 找到对应要点亮的二极管数据
+	LJMP DISP
+	
+	DB 0FAH, 0F5H, 0AFH, 5FH, 0AAH, 55H, 00H, 0FFH
+		
+	DISP: MOV P1, A
+	JMP LOOP1
+	
+	IT11:
+	CLR TR1          ;关闭定时器
+	DEC R0         ;自动减一
+	MOV TL1, #00H ;重置初值
+	MOV TH1, #0DCH
+	SETB TR1          ;启动定时器
+	RETI
+	
+	END
+
+四、实验四
+1.步进电机源程序
+ORG 0000H
+	STOP: ORL P1, #00H           ;或运算
+	LOOP: MOV P1, #00H           ;电机停止
+	JNB P2.0, FOR2 ; 如果p2.0按下正转  
+	JNB P2.1, REV2 ; 如果p2.1按下反转
+	JNB P2.2, STOP1 ; 如果p2.2按下停止
+	JMP LOOP ;反复监测键盘
+	
+	;正转
+	FOR: MOV R0, #00H  ;偏移量
+	FOR1: MOV A, R0
+	MOV DPTR, #TABLE
+	MOVC A, @A+DPTR          ;找到当前正转代码
+	JZ FOR ;是否到了结束码00h A为0后正转代码一周循环结束 开始下一次循环
+	CPL A            ;取反数据 低电平有效
+	MOV P1, A           ;输出到电机
+	JNB P2.2, STOP1    ;判断有新的按键按下吗
+	JNB P2.1, REV2
+	JNB P2.0, FOR2
+	CALL DELAY        ;没有则继续执行正转
+	INC R0            ;下一个数据
+	JMP FOR1        ;跳转到FOR1
+	
+	;反转
+	REV: 
+	MOV R0, #05H ;反转到table取码指针初值
+	REV1: 
+	MOV A, R0
+	MOV DPTR, #TABLE  ;找到当前反转代码
+	MOVC A, @A+DPTR
+	JZ REV            ;是否到了结束码00h A为0后正转代码一周循环结束 开始下一次循环
+	CPL A            ;取反数据 低电平有效
+	MOV P1, A
+	JNB P2.2, STOP1    ;判断有新的按键按下吗
+	JNB P2.1, REV2
+	JNB P2.0, FOR2
+	CALL DELAY ;转动的速度
+	INC R0          ;下一个数据
+	JMP REV1        ;跳转到REV1
+	
+	STOP1: CALL DELAY ;延时按件键消除抖动
+	JNB P2.2, $         ;p2.2放开否?
+	MOV P1, #00H     ;电机停止
+	CALL DELAY
+	JMP STOP       ;跳转到STOP
+	
+	FOR2: CALL DELAY       ;延时
+	JNB P2.0, $           ;等待正转按键释放
+	CALL DELAY
+	JMP FOR
+	
+	REV2: CALL DELAY   ;延时
+	JNB P2.1, $        ;等待反转按键释放
+	CALL DELAY     
+	JMP REV
+	
+	DELAY: 
+	MOV R1, #150 ;步进电机的转速20ms
+	D1: MOV R2, #248
+	DJNZ R2, $
+	DJNZ R1, D1
+	RET
+	
+	TABLE:
+	db 01h,02h,04h,08h ;正转表
+	db 00 ;正转结束
+	db 01h,08h,04h,02h ;反转
+	db 00 ;反转结束
+	END
+
+2.步进电机加减速修改程序
+	;P2.3--减速 
+	;P2.4--加速
+	ORG 0000H
+	MOV R3,#5                    ;相邻步之间的延时决定电机的转速。故控制调用延时函数次数 从而控制加减速
+	STOP: ORL P1, #00H           ;或运算
+	LOOP: MOV P1, #00H           ;电机停止
+	JNB P2.0, FOR2 ; 如果p2.0按下正转  
+	JNB P2.1, REV2 ; 如果p2.1按下反转
+	JNB P2.2, STOP1 ; 如果p2.2按下停止
+	JMP LOOP ;反复监测键盘
+	
+	
+	STOP1: CALL DELAY ;延时按件键消除抖动
+	JNB P2.2, $         ;p2.2放开否?
+	MOV P1, #00H     ;电机停止
+	CALL DELAY
+	JMP STOP       ;跳转到STOP
+	
+	FOR2: CALL DELAY       ;延时
+	JNB P2.0, $           ;等待正转按键释放
+	CALL DELAY
+	JMP FOR
+	
+	REV2: CALL DELAY   ;延时
+	JNB P2.1, $        ;等待反转按键释放
+	CALL DELAY     
+	JMP REV
+	
+	
+	
+	;正转
+	FOR: MOV R0, #00H  ;偏移量
+	FOR1: MOV A, R0
+	MOV DPTR, #TABLE
+	MOVC A, @A+DPTR          ;找到当前正转代码
+	JZ FOR ;是否到了结束码00h A为0后正转代码一周循环结束 开始下一次循环
+	CPL A            ;取反数据 低电平有效
+	MOV P1, A           ;输出到电机
+	MOV A,R3
+	LOOP1:
+	JNB P2.2, STOP1    ;判断有新的按键按下吗
+	JNB P2.1, REV2
+	JNB P2.0, FOR2
+	JB P2.3, FOR3      ;判断减速按键是否按下 没有按就跳转 
+    JNB P2.3,$         ;等待按键释放
+	INC R3              ;R3自动加一
+	MOV A,R3            
+	CJNE R3,#11,FOR3   ;范围1-10
+	DEC A
+	DEC R3
+	FOR3:
+	JB P2.4,FOR4       ;判断加速按键是否按下
+	JNB P2.4,$         ;等待按键释放
+	DEC R3            ;R3自动减1
+	MOV A,R3
+	CJNE R3,#0,FOR4   ;范围1-10
+	INC A
+	INC R3
+	FOR4:
+	CALL DELAY        ;没有则继续执行正转
+	DJNZ ACC,LOOP1
+	INC R0            ;下一个数据
+	JMP FOR1        ;跳转到FOR1
+	
+	;反转
+	REV: 
+	MOV R0, #05H ;反转到table取码指针初值
+	REV1: 
+	MOV A, R0
+	MOV DPTR, #TABLE  ;找到当前反转代码
+	MOVC A, @A+DPTR
+	JZ REV            ;是否到了结束码00h A为0后正转代码一周循环结束 开始下一次循环
+	CPL A            ;取反数据 低电平有效
+	MOV P1, A
+	MOV A,R3
+	LOOP2:
+	JNB P2.2, STOP1    ;判断有新的按键按下吗
+	JNB P2.1, REV2
+	JNB P2.0, FOR2
+	JB P2.3, REV3
+    JNB P2.3,$
+	INC R3
+	MOV A,R3
+	CJNE R3,#11,REV3   ;范围1-10
+	DEC A
+	DEC R3
+	REV3:
+	JB P2.4,REV4
+	JNB P2.4,$
+	DEC R3
+	MOV A,R3
+	CJNE R3,#0,REV4   ;范围1-10
+	INC A
+	INC R3
+	REV4:
+	CALL DELAY        ;没有则继续执行正转
+	DJNZ ACC,LOOP2
+	INC R0          ;下一个数据
+	JMP REV1        ;跳转到REV1
+	
+	
+	
+	DELAY: 
+	MOV R1, #30 ;步进电机的转速20ms
+	D1: MOV R2, #248
+	DJNZ R2, $
+	DJNZ R1, D1
+	RET
+	
+	TABLE:
+	db 01h,02h,04h,08h ;正转表
+	db 00 ;正转结束
+	db 01h,08h,04h,02h ;反转
+	db 00 ;反转结束
+	END
+
+五、实验五
+1.源程序
+ORG 0000H
+LJMP START
+ORG 0030H
+START:	MOV SP,#60H
+MOV SCON,#01010000B 
+		MOV TMOD,#20H
+ORL PCON,#10000000B
+		MOV TH1,#0F3H
+MOV TL1,#0F3H
+		SETB TR1 
+		AGAIN: JNB RI,$ 
+		CLR RI 
+		MOV A,SBUF 
+		MOV SBUF,A 
+		JNB TI,$ 
+		CLR TI 
+SJMP AGAIN
+END
+
+2.修改1
+ORG 0000H
+LJMP START
+ORG 0030H
+START: MOV SP,#60H
+MOV R0,#01H
+MOV SCON,#01010000B
+MOV TMOD,#20H
+ORL PCON,#10000000B
+MOV TH1,#0F3H
+MOV TL1,#0F3H
+SETB TR1
+AGAIN: JNB RI,$
+CLR RI
+MOV A,SBUF
+MOV A,R0
+RL A
+MOV P1,A
+MOV R0,A
+MOV SBUF,A
+JNB TI,$
+CLR TI
+SJMP AGAIN
+END
+
+3.修改2
+ORG 0000H 
+LJMP START 
+ORG 0030H 
+START: MOV SP,#60H 
+MOV SCON,#01010000B  
+ 	 	MOV TMOD,#20H 
+ORL PCON,#10000000B 
+ 	 	MOV TH1,#0F3H 
+MOV TL1,#0F3H 
+ 	 	SETB TR1
+  	        MOV R0,#15
+		MOV R1,#00H
+		MOV R2,#11111110B
+		MOV A,R2
+		MOV P1,A
+		CLR A
+		MOV DPTR,#ACTAB
+ 	 	AGAIN: JNB RI,$  
+ 	 	CLR RI  
+ 	 	MOV A,SBUF
+  	        CJNE A,#'T',AGAIN
+		CLR A
+		LJMP LOOP
+		LOOP: MOV A,R1
+		MOVC A,@A+DPTR	
+ 	 	MOV SBUF,A  
+ 	 	JNB TI,$  
+ 	 	CLR TI 
+ 	        DJNZ R0,LOOP
+		SJMP AGAIN
+		ACTAB: DB'Welcome to cumt'
+END
+
+六、实验六
+1.源程序
+BIT_COUNT   DATA 07FH
+  TIMER       DATA 07EH
+  TIMER1      DATA 07DH
+  TEN         DATA 07CH
+  DATA_IN     DATA 020H
+  DATA_OUT    DATA 021H
+        
+  KEY   BIT P1.3             ;7279的KEY连接于P1.3
+  CLK   BIT P1.6             ;7279的CLK连接于P1.6
+  DAT   BIT P1.7             ;7279的DATA连接于P1.7
+  CS    BIT P2.7             ;7279的CS连接于P2.7
+
+  			ORG    0000H
+ 		 	LJMP    START
+ 	 	ORG    0100H
+START:	    MOV  SP,#2FH        ;定义堆栈
+            MOV  P1,#0FFH       ;I/O口初始化
+            MOV  TIMER, #50
+
+START_DELAY:  MOV TIMER1,#255
+START_DELAY1: DJNZ TIMER1, START_DELAY1
+                DJNZ TIMER,START_DELAY
+                MOV  DATA_OUT,#0BFH ;发复位指令
+                CALL SEND
+                SETB CS                  ;复位CS为高电平
+ 			    SETB F0
+			 
+MAIN:       JB   KEY,MAIN            ;检测是否有键按下
+			 JNB  F0,NEXTKEY
+			 MOV  DATA_OUT,#0A4H 
+             CALL SEND
+             SETB CS                 			 
+			 CLR  F0
+			 
+NEXTKEY:	 MOV  DATA_OUT,#15H 
+             CALL SEND                
+             CALL RECEIVE            
+             SETB CS
+             MOV  B,#10
+             MOV  A,DATA_IN
+             DIV  AB
+             MOV  TEN,A
+             MOV  DATA_OUT,#0A1H 
+             CALL SEND
+             MOV  DATA_OUT,#0A1H
+             CALL SEND
+             MOV  DATA_OUT,#81H
+             CALL SEND
+             MOV  DATA_OUT,TEN
+             CALL SEND
+             MOV  DATA_OUT,#80H
+             CALL SEND
+             MOV  DATA_OUT,B
+			  CALL SEND
+             SETB CS
+WAIT:        JNB  KEY,WAIT
+             JMP  MAIN
+
+; 发送子程序
+SEND:       MOV   BIT_COUNT,#8
+            CLR   CS
+            CALL  LONG_DELAY
+
+SEND_LOOP:  MOV   C,DATA_OUT.7
+            MOV   DAT,C
+            SETB  CLK
+            MOV   A,DATA_OUT
+            RL    A
+            MOV   DATA_OUT,A
+            CALL  SHORT_DELAY
+            CLR   CLK
+            CALL  SHORT_DELAY
+            DJNZ  BIT_COUNT,SEND_LOOP
+            CLR   DAT
+            RET
+;接收子程序
+RECEIVE:   MOV    BIT_COUNT,#8
+           SETB   DAT
+           CALL   LONG_DELAY
+RECEIVE_LOOP: SETB CLK
+           CALL   SHORT_DELAY
+           MOV    A,DATA_IN
+           RL     A
+           MOV    DATA_IN,A
+           MOV    C,DAT
+           MOV    DATA_IN.0,C
+           CLR    CLK
+           CALL   SHORT_DELAY
+           DJNZ   BIT_COUNT,RECEIVE_LOOP
+           CLR    DAT
+           RET
+;延时子程序
+LONG_DELAY: MOV   TIMER,#80
+DELAY_LOOP: DJNZ  TIMER,DELAY_LOOP
+            RET
+SHORT_DELAY:MOV   TIMER,#6
+SHORT_LP:   DJNZ  TIMER,SHORT_LP
+            RET
+            END
+
+2.修改1
+BIT_COUNT DATA 07FH 
+ TIMER DATA 07EH 
+ TIMER1 DATA 07DH 
+ TEN DATA 07CH 
+ DATA_IN DATA 020H 
+ DATA_OUT DATA 021H 
+ 
+ KEY BIT P1.3 ;7279的KEY连接于P1.3 
+ CLK BIT P1.6 ;7279的CLK连接于P1.6 
+ DAT BIT P1.7 ;7279的DATA连接于P1.7 
+ CS BIT P2.7 ;7279的CS连接于P2.7 
+
+ ORG 0000H 
+ LJMP START 
+ ORG 0100H 
+START: MOV SP,#2FH ;定义堆栈
+ MOV P1,#0FFH ;I/O口初始化
+ MOV TIMER, #50 
+START_DELAY: MOV TIMER1,#255 
+START_DELAY1: DJNZ TIMER1, START_DELAY1 
+ DJNZ TIMER,START_DELAY 
+ MOV DATA_OUT,#0BFH ;发复位指令
+ CALL SEND 
+ SETB CS ;复位CS为高电平
+ SETB F0 
+ 
+MAIN: JB KEY,MAIN ;检测是否有键按下
+ JNB F0,NEXTKEY 
+ MOV DATA_OUT,#0A4H 
+ CALL SEND 
+ SETB CS 
+ CLR F0 
+ 
+NEXTKEY: MOV DATA_OUT,#15H 
+ CALL SEND 
+ CALL RECEIVE 
+ SETB CS 
+ 
+ MOV A,DATA_IN 
+
+ MOV TEN,A 
+ MOV DATA_OUT,#0A1H  
+ CALL SEND 
+ MOV DATA_OUT,#11001000B 
+ 
+ CALL SEND 
+ MOV DATA_OUT,TEN 
+
+ CALL SEND 
+ MOV DATA_OUT,#80H 
+ CALL SEND 
+ SETB CS 
+WAIT: JNB KEY,WAIT 
+ JMP MAIN 
+; 发送子程序
+SEND: MOV BIT_COUNT,#8 
+ CLR CS 
+ CALL LONG_DELAY 
+SEND_LOOP: MOV C,DATA_OUT.7 
+ MOV DAT,C 
+ SETB CLK 
+ MOV A,DATA_OUT 
+ RL A 
+ MOV DATA_OUT,A 
+ CALL SHORT_DELAY 
+ CLR CLK 
+ CALL SHORT_DELAY 
+ DJNZ BIT_COUNT,SEND_LOOP 
+ CLR DAT 
+ RET 
+;接收子程序
+RECEIVE: MOV BIT_COUNT,#8 
+ SETB DAT 
+ CALL LONG_DELAY 
+RECEIVE_LOOP: SETB CLK 
+ CALL SHORT_DELAY 
+ MOV A,DATA_IN 
+ RL A 
+ MOV DATA_IN,A 
+ MOV C,DAT 
+ MOV DATA_IN.0,C 
+ CLR CLK 
+
+
+ CALL SHORT_DELAY 
+ DJNZ BIT_COUNT,RECEIVE_LOOP 
+ CLR DAT 
+ RET 
+;延时子程序
+LONG_DELAY: MOV TIMER,#80 
+DELAY_LOOP: DJNZ TIMER,DELAY_LOOP 
+ RET 
+SHORT_DELAY:MOV TIMER,#6 
+SHORT_LP: DJNZ TIMER,SHORT_LP 
+ RET 
+ END
+
+3.修改2
+BIT_COUNT DATA 07FH 
+ TIMER DATA 07EH 
+ TIMER1 DATA 07DH 
+ TEN DATA 07CH 
+ DATA_IN DATA 020H 
+ DATA_OUT DATA 021H 
+ 
+ KEY BIT P1.3 ;7279的KEY连接于P1.3 
+ CLK BIT P1.6 ;7279的CLK连接于P1.6 
+ DAT BIT P1.7 ;7279的DATA连接于P1.7 
+ CS BIT P2.7 ;7279的CS连接于P2.7 
+
+ ORG 0000H 
+ LJMP START 
+ ORG 0100H 
+START: MOV SP,#2FH ;定义堆栈
+ MOV P1,#0FFH ;I/O口初始化
+ MOV TIMER, #50 
+START_DELAY: MOV TIMER1,#255 
+START_DELAY1: DJNZ TIMER1, START_DELAY1 
+ DJNZ TIMER,START_DELAY 
+ MOV DATA_OUT,#0BFH ;发复位指令
+ CALL SEND 
+ SETB CS ;复位CS为高电平
+ SETB F0 
+ 
+MAIN: JB KEY,MAIN ;检测是否有键按下
+ JNB F0,NEXTKEY 
+ MOV DATA_OUT,#0A4H 
+ CALL SEND 
+ SETB CS 
+ SETB F0 
+ 
+NEXTKEY: MOV DATA_OUT,#15H 
+ CALL SEND 
+ CALL RECEIVE 
+ SETB CS 
+ 
+ MOV A,DATA_IN 
+
+ MOV TEN,A 
+ MOV DATA_OUT,#0A1H  
+ CALL SEND 
+ MOV DATA_OUT,#11001000B 
+ 
+ CALL SEND 
+ MOV DATA_OUT,TEN 
+
+ CALL SEND 
+ MOV DATA_OUT,#80H 
+ CALL SEND 
+ SETB CS 
+WAIT: JNB KEY,WAIT 
+ JMP MAIN 
+; 发送子程序
+SEND: MOV BIT_COUNT,#8 
+ CLR CS 
+ CALL LONG_DELAY 
+SEND_LOOP: MOV C,DATA_OUT.7 
+ MOV DAT,C 
+ SETB CLK 
+ MOV A,DATA_OUT 
+ RL A 
+ MOV DATA_OUT,A 
+ CALL SHORT_DELAY 
+ CLR CLK 
+ CALL SHORT_DELAY 
+ DJNZ BIT_COUNT,SEND_LOOP 
+ CLR DAT 
+ RET 
+;接收子程序
+RECEIVE: MOV BIT_COUNT,#8 
+ SETB DAT 
+ CALL LONG_DELAY 
+RECEIVE_LOOP: SETB CLK 
+ CALL SHORT_DELAY 
+ MOV A,DATA_IN 
+ RL A 
+ MOV DATA_IN,A 
+ MOV C,DAT 
+ MOV DATA_IN.0,C 
+ CLR CLK 
+
+
+ CALL SHORT_DELAY 
+ DJNZ BIT_COUNT,RECEIVE_LOOP 
+ CLR DAT 
+ RET 
+;延时子程序
+LONG_DELAY: MOV TIMER,#80 
+DELAY_LOOP: DJNZ TIMER,DELAY_LOOP 
+ RET 
+SHORT_DELAY:MOV TIMER,#6 
+SHORT_LP: DJNZ TIMER,SHORT_LP 
+ RET 
+ END
+
+4.修改3
+BIT_COUNT   	DATA 07FH
+		TIMER       	DATA 07EH
+		TIMER1      	DATA 07DH
+		TEN         	DATA 07CH
+		DATA_IN     	DATA 020H
+  		DATA_OUT    	DATA 021H
+        
+  		KEY   	    	BIT P1.3             			;7279的KEY 连接于P1.3
+  		CLK   		BIT P1.6             			;7279的CLK 连接于P1.6
+  		DAT   		BIT P1.7             			;7279的DATA连接于P1.7
+  		CS    		BIT P2.7             			;7279的CS  连接于P2.7
+	
+  		ORG    		0000H
+ 		LJMP   		START
+ 		ORG    		0100H
+START:		MOV     	SP       ,  #2FH        	   	;定义堆栈
+        	MOV  		P1       ,  #0FFH           		;I/O口初始化
+        	MOV  		TIMER    ,  #50
+
+START_DELAY:  	MOV  		TIMER1   ,  #255
+START_DELAY1: 	DJNZ 		TIMER1   ,  START_DELAY1		
+                DJNZ 		TIMER    ,  START_DELAY			;延时指令,延时255*50次
+                MOV  		DATA_OUT ,  #0BFH 			;发闪烁指令
+                CALL 		SEND
+                SETB 		CS                  			;复位CS为高电平
+ 		SETB 		F0
+			 
+MAIN:       	JB 		KEY,MAIN            			;检测是否有键按下
+		JNB  		F0,NEXTKEY
+		MOV  		DATA_OUT,#0A4H 
+             	CALL 		SEND
+             	SETB 		CS                 			 
+		CLR  		F0
+			 
+NEXTKEY:	MOV  		DATA_OUT,#15H ;读键盘指令
+             	CALL 		SEND                
+             	CALL 		RECEIVE            
+             	SETB 		CS
+               
+                MOV             DPTR,#TAB
+                MOV  		A,DATA_IN
+                
+                MOVC             A,@A+DPTR
+               	MOV              R0,A
+             	
+             				;采集按键号,屏蔽高四位,仅显示低四位0-F
+                MOV  		DATA_OUT,#10010000B
+             	CALL 		SEND
+            	MOV             A,R0
+                MOV             DATA_OUT,A;
+                 CALL 		SEND 
+              	SETB 		CS
+WAIT:        	JNB  		KEY,WAIT
+             	JMP  		MAIN
+
+						; 发送子程序
+SEND:       	MOV   		BIT_COUNT,#8
+            	CLR   		CS		
+            	CALL  		LONG_DELAY
+
+SEND_LOOP:  	MOV   		C,DATA_OUT.7
+            	MOV   		DAT,C
+            	SETB  		CLK
+            	MOV   		A,DATA_OUT
+            	RL    		A
+            	MOV   		DATA_OUT,A
+            	CALL  		SHORT_DELAY
+            	CLR   		CLK
+            	CALL  		SHORT_DELAY
+            	DJNZ  		BIT_COUNT,SEND_LOOP
+            	CLR   		DAT
+            	RET
+					;接收子程序
+RECEIVE:   	MOV    		BIT_COUNT,#8
+           	SETB   		DAT
+           	CALL 		LONG_DELAY
+RECEIVE_LOOP: 	SETB 		CLK
+           	CALL   		SHORT_DELAY
+           	MOV    		A,DATA_IN
+           	RL    		A
+           	MOV    		DATA_IN,A
+           	MOV   		C,DAT
+           	MOV    		DATA_IN.0,C
+           	CLR    		CLK
+           	CALL   		SHORT_DELAY
+           	DJNZ   		BIT_COUNT,RECEIVE_LOOP
+           	CLR    		DAT
+           	RET
+					;延时子程序
+LONG_DELAY: 	MOV   		TIMER,#80
+DELAY_LOOP: 	DJNZ  		TIMER,DELAY_LOOP
+            	RET
+SHORT_DELAY:	MOV   		TIMER,#6
+SHORT_LP:   	DJNZ  		TIMER,SHORT_LP
+            	RET
+TAB:  DB 7EH,30H,6DH,79H,33H,5BH,5FH,70H,7FH,7BH,77H,1FH,4EH,3DH,4FH,47H
+    
+            	END

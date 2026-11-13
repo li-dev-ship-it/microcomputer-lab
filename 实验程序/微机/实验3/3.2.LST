@@ -1,0 +1,79 @@
+A51 MACRO ASSEMBLER  3_2                                                                  10/20/2024 11:51:07 PAGE     1
+
+
+MACRO ASSEMBLER A51 V7.08a
+OBJECT MODULE PLACED IN 3.2.OBJ
+ASSEMBLER INVOKED BY: C:\Keil\C51\BIN\A51.EXE 3.2.ASM SET(SMALL) DEBUG EP
+
+LOC  OBJ            LINE     SOURCE
+
+                       1     
+0000                   2             ORG 0000H
+0000 0130              3             AJMP START
+001B                   4             ORG 001BH
+001B 0166              5             AJMP IT11      ;¶¨Ê±Æ÷1ÖÐ¶ÏÈë¿Ú
+0030                   6             ORG 0030H
+0030                   7             START:         ;Ö÷³ÌÐòÈë¿Ú
+0030 7590FF            8             MOV P1, #0FFH       ;P1¿ÚÊä³ö¸ßµçÆ½
+0033 74FA              9             MOV A, #11111010B  
+0035 7903             10             MOV R1, #3
+0037 7814             11             MOV R0, #14H       ;Ê®½øÖÆÎª20 ³ËÒÔ¶¨Ê±Ê±¼ä50ms ¼´×Ü¶¨Ê±Ê±¼äÎª1Ãë    
+0039 53890F           12             ANL TMOD, #0FH   ;TMOD¸ßËÄÎ»ÇåÁã   
+003C 438910           13             ORL TMOD, #10H   ;TMODµÚËÄÎ»ÖÃ1  ¶¨Ê±Æ÷1Îª¶¨Ê±·½Ê½ÇÒÎªÄ£Ê½1
+003F 758BFE           14             MOV TL1, #0FEH
+0042 758D4B           15             MOV TH1, #4BH       ;ÉèÖÃ³õÖµ (£¨10000H-4BFEH£©*12/11.0592)us=¶¨Ê±Ê±¼ä 
+0045 43A888           16             ORL IE, #88H        ;EA¡¢ET1ÖÃ1 ¿ªÆôÖÐ¶Ï
+0048 D28E             17             SETB TR1           ;Æô¶¯¶¨Ê±Æ÷
+                      18             
+004A                  19             LOOP1: 
+004A B80015           20             CJNE R0, #00H, DISP    ;¶¨Ê±Ê±¼äµ½Ë³ÐòÖ´ÐÐ ·ñÔòÌø×ªµ½DISP  
+004D 7814             21             MOV R0, #14H           ;ÖØÐÂ¸øR0¸³Öµ  
+004F 09               22             INC R1                 ;R1×Ô¶¯¼Ó1
+0050 B90B02           23             CJNE R1, #0BH, LOOP2   ;ÏÞÖµR1 ¼Óµ½0BHºóÓÖ»Øµ½03H 
+0053 7903             24             MOV R1, #3
+0055                  25             LOOP2: 
+                      26             
+0055 E9               27             MOV A, R1      
+0056 83               28             MOVC A,@A+PC  ;±äÖ·Ñ°Ö· ÕÒµ½¶ÔÓ¦ÒªµãÁÁµÄ¶þ¼«¹ÜÊ¾Ý
+0057 020062           29             LJMP DISP
+                      30             
+005A FAF5AF5F         31             DB 0FAH, 0F5H, 0AFH, 5FH, 0AAH, 55H, 00H, 0FFH
+005E AA5500FF                
+                      32                     
+0062 F590             33             DISP: MOV P1, A
+0064 80E4             34             JMP LOOP1
+                      35             
+0066                  36             IT11:
+0066 C28E             37             CLR TR1          ;¹Ø±Õ¶¨Ê±Æ÷
+0068 18               38             DEC R0         ;×Ô¶¯¼õÒ»
+0069 758BFE           39             MOV TL1, #0FEH ;ÖØÖÃ³õÖµ
+006C 758D4B           40             MOV TH1, #4BH
+006F D28E             41             SETB TR1          ;Æô¶¯¶¨Ê±Æ÷
+0071 32               42             RETI
+                      43             
+                      44             END
+A51 MACRO ASSEMBLER  3_2                                                                  10/20/2024 11:51:07 PAGE     2
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+DISP . . . . . . .  C ADDR   0062H   A   
+IE . . . . . . . .  D ADDR   00A8H   A   
+IT11 . . . . . . .  C ADDR   0066H   A   
+LOOP1. . . . . . .  C ADDR   004AH   A   
+LOOP2. . . . . . .  C ADDR   0055H   A   
+P1 . . . . . . . .  D ADDR   0090H   A   
+START. . . . . . .  C ADDR   0030H   A   
+TH1. . . . . . . .  D ADDR   008DH   A   
+TL1. . . . . . . .  D ADDR   008BH   A   
+TMOD . . . . . . .  D ADDR   0089H   A   
+TR1. . . . . . . .  B ADDR   0088H.6 A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)
