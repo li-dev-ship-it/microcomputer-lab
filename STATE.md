@@ -13,6 +13,12 @@
 - 原始文件不作修改；SHA-256 清单见 `原始资料清单.json`。
 - 用户已授权上传全部资料至 `li-dev-ship-it/microcomputer-lab`，明确要求 Private 私有仓库。
 
+## 上传及接入结果
+
+- 已创建私人仓库并完成初次上传，GitHub 返回可见性为 `PRIVATE`。
+- Codex CLI 已能查询云端任务，但没有可选云端环境；尝试按本仓库获取环境时返回 HTTP 403 `repo_not_accessible`。
+- 因此云端读取验收尚未通过，需要用户在 Codex 的 GitHub 连接设置中授权该新仓库并选择或创建云端环境。
+
 ## 后续步骤
 
 - 核实远端仓库为 Private，核对全部原始文件上传完整性。
